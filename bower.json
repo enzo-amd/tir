@@ -1,0 +1,22 @@
+{
+  "name": "tir",
+  "version": "0.0.0",
+  "main": "app.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "authors": [
+    "Yuriy Sergunin"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

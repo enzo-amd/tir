@@ -6,8 +6,9 @@
     angular.module('app', [
         'ngRoute',
         'ngCookies',
-        'ui.bootstrap',
-        'ngAnimate',
+        //'ui.bootstrap',
+        //'ngAnimate',
+        'ngMaterial',
         'templates'
     ])
         .config(config)

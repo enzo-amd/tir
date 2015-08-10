@@ -9,3 +9,7 @@ out
 gen
 
 bower_components
+node_modules
+
+app.js
+templates.js

@@ -1,0 +1,13 @@
+{
+  "name": "tir",
+  "description": "A package using versioning best-practices",
+  "author": "Yuriy Sergunin <enzo_amd@mail.ru>",
+  "engine": "node >= 0.12.7",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-angular-templatecache": "^1.7.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-ng-annotate": "^1.1.0",
+    "gulp-sourcemaps": "^1.5.2"
+  }
+}

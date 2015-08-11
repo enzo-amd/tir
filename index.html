@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html>
 <head>
     <meta charset="UTF-8">
     <title></title>
@@ -25,9 +25,29 @@
     <script src="app.js"></script>
     <script src="templates.js"></script>
 </head>
-<body>
+<body ng-app="app" ng-cloak>
+<md-content>
+
+    <!-- The top toolbar -->
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings">
+                <md-icon md-svg-icon="./bower_components/material-design-icons/maps/svg/design/ic_local_airport_24px.svg"></md-icon>
+                <md-icon md-svg-icon="social:android" aria-label="android "></md-icon>
+                <md-icon md-svg-icon="action:settings" aria-label="settings "></md-icon>
+            </md-button>
+            <h2>
+                <span class="md-title">Get Lost!</span>
+            </h2>
+        </div>
+    </md-toolbar>
+
+
+
     <div shoot-session-list></div>
 
     <div ng-view></div>
+
+</md-content>
 </body>
 </html>

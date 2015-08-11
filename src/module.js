@@ -18,8 +18,14 @@
      });*/
 
 
-    config.$inject = ['$routeProvider', '$locationProvider'];
-    function config($routeProvider, $locationProvider) {
+    config.$inject = ['$routeProvider', '$locationProvider', '$mdIconProvider'];
+    function config($routeProvider, $locationProvider, $mdIconProvider) {
+
+        $mdIconProvider
+          //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
+          .iconSet('social', './bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24)
+          .defaultIconSet('./bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24);
+
         $routeProvider
             .when('/', {
                 controller: 'HomeController',

@@ -33,15 +33,23 @@
         $urlRouterProvider.otherwise('/notfound');
 
         $stateProvider
-            .state('login', {
-                url: '/login', templateUrl: 'modules/login/templates/login.view.html',
-                controller: 'LoginController',
-                controllerAs: 'vm'
-            })
+          .state('home', {
+              url: '/', templateUrl: 'modules/home/templates/home.view.html',
+              controller: 'HomeController',
+              controllerAs: 'vm',
+              access: {
+                  loginRequired: true
+              }
+          })
+          .state('login', {
+              url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
+              controller: 'LoginController',
+              controllerAs: 'vm'
+          })
         ;
     }
 
-    function run($rootScope, $state, $stateParams) {
+    function run($rootScope, $state, $stateParams, Util, Auth) {
 
         /**
          * Init Backendless
@@ -61,6 +69,14 @@
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             console.log('$stateChangeStart', toState);
+
+            var access = Util.getStateInheritedAccessRules(toState);
+
+            if (access.loginRequired && !Auth.isLoggedIn()) {
+                event.preventDefault();
+
+                Auth.showLogin({from: Util.encodeState(toState, toParams)});
+            }
         });
     }
 

@@ -4,7 +4,12 @@
 
 (function (module) {
 
-    module.service('Auth', function ($q, $mdToast) {
+    module.service('Auth', function ($q, $state, $mdToast) {
+
+        var state = {
+            user: null
+        };
+
 
         // Implementations
 
@@ -12,6 +17,8 @@
             var promise = $q(function (resolve, reject) {
                 var userLoggedIn = function (user) {
                     console.info('login', user);
+
+                    state.user = user;
 
                     resolve(user);
                 };
@@ -21,7 +28,7 @@
                     reject(error);
                 };
 
-                Backendless.UserService.login(userCredentials.email, userCredentials.password, false, new Backendless.Async(userLoggedIn, gotError));
+                Backendless.UserService.login(userCredentials.email, userCredentials.password, true, new Backendless.Async(userLoggedIn, gotError));
             });
 
             var message = {
@@ -53,7 +60,7 @@
                             .content(messageContent)
                             .position('top right')
                             .theme(message.type)
-                            .hideDelay(30000)
+                            .hideDelay(10000)
                     );
                 });
 
@@ -71,8 +78,14 @@
             Backendless.UserService.isValidLogin(new Backendless.Async(success, error));
         }
 
-        function isAuthentificated() {
-            return Backendless.LocalCache.get('current-user');
+        function isLoggedIn() {
+            var user = state.user = state.user || Backendless.LocalCache.get('current-user');
+
+            return !!user;
+        }
+
+        function showLogin(params) {
+            $state.go('login', params);
         }
 
 
@@ -80,7 +93,11 @@
         // Export
 
         return {
-            login: login
+            state: state,
+
+            login: login,
+            isLoggedIn: isLoggedIn,
+            showLogin: showLogin
         };
     });
 

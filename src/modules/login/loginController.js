@@ -3,7 +3,7 @@
 
     module.controller('LoginController', LoginController);
 
-    function LoginController(Auth) {
+    function LoginController($state, Auth, Util) {
         var vm = this;
 
 
@@ -38,7 +38,14 @@
 
             Auth.login(vm.userCredentials)
                 .then(function pass() {
+                  var originalPageInfo = Util.decodeState($state.params.from);
 
+                  if (originalPageInfo) {
+                      $state.go(originalPageInfo.state.name, originalPageInfo.params, {reload: true});
+                  }
+                  else {
+                      $state.go('home');
+                  }
                 })
                 .finally(function () {
                     vm.spinner.active = false;

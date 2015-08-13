@@ -3,7 +3,7 @@
 
     module.controller('LoginController', LoginController);
 
-    function LoginController($state, Auth, Util) {
+    function LoginController($state, Auth, Util, Tirs) {
         var vm = this;
 
 
@@ -16,6 +16,8 @@
         // Pass fields to the View
         _.assign(vm, {
             userCredentials: userCredentials,
+            tirsState: Tirs.state,
+
             spinner: {
                 active: false
             }
@@ -27,6 +29,20 @@
             login: login
         });
 
+
+        // Initialize
+
+        (function () {
+            vm.spinner.active = true;
+
+            Tirs.getTirs()
+              .then(function (tirs) {
+                  Tirs.state.tir = Tirs.state.tir || tirs[0];
+              })
+              .finally(function () {
+                  vm.spinner.active = false;
+              });
+        })();
 
 
         // Implementations

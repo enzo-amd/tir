@@ -4,30 +4,46 @@
 
 
         var Classes = {
-            ShootSession: function ShootSession(args) {
+            ShootSessions: function ShootSessions(args) {
                 args = args || {};
-                this._private_relations = [];
+                this._private_relations = [
+                    "tir",
+                    "operator"];
                 this._private_geoRelations = [];
                 this._private_dates = [
-                    'updated',
-                    'created'];
-                this.___class = 'ShootSession';
+                    "startDate",
+                    "endDate",
+                    "created",
+                    "updated"];
+                this.___class = "ShootSessions";
 
-                this.name = args.name || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 500) - 1)));
+                this.gun = args.gun || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 256) - 1)));
 
-                this.updated = args.updated || new Date();
+                this.startDate = args.startDate || new Date();
+
+                this.endDate = args.endDate || new Date();
+
+                this.shots = args.shots || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
+
+                this.price = args.price || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
 
                 this.ownerId = args.ownerId || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 500) - 1)));
 
+                this.won = args.won || false;
+
+                this.duration = args.duration || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
+
+                this.hits = args.hits || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
+
                 this.created = args.created || new Date();
 
-                this.level = args.level || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 500) - 1)));
+                this.updated = args.updated || new Date();
 
-                this.value = args.value || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
+                this.tir = args.tir || null;
 
-                this.policy = args.policy || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 500) - 1)));
+                this.operator = args.operator || null;
 
-                var storage = Backendless.Persistence.of(ShootSession);
+                var storage = Backendless.Persistence.of(ShootSessions);
 
                 this.save = function (async) {
                     delete this._private_relations;
@@ -40,6 +56,20 @@
                     var result = storage.remove(this, async);
                     this.objectId = null;
                     return result;
+                };
+
+                this.getTir = function () {
+                    if (this.tir == null)
+                        storage.loadRelations(this, ['tir']);
+
+                    return this.tir;
+                };
+
+                this.getOperator = function () {
+                    if (this.operator == null)
+                        storage.loadRelations(this, ['operator']);
+
+                    return this.operator;
                 };
 
             }

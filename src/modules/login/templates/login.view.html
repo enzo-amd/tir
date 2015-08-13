@@ -17,8 +17,14 @@
                             <input type="password" ng-model="vm.userCredentials.password" required>
                         </md-input-container>
 
+                        <md-input-container>
+                            <md-select ng-model="vm.tirsState.tir" placeholder="Тир">
+                                <md-option ng-value="tir" ng-repeat="tir in vm.tirsState.tirs">{{ tir.title }}</md-option>
+                            </md-select>
+                        </md-input-container>
+
                         <md-button type="submit" class="md-primary"
-                                   ng-class="{'md-raised md-hue-1': (loginForm.$dirty && loginForm.$valid) }"
+                                   ng-class="{'md-raised md-hue-1': loginForm.$valid }"
                                    aria-label="Submit Login">Войти
                         </md-button>
 

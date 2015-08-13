@@ -4,7 +4,7 @@
 
 (function (module) {
 
-    module.service('Auth', function ($q, $state, $mdToast) {
+    module.service('Auth', function ($q, $state, Notify) {
 
         var state = {
             user: null
@@ -14,57 +14,34 @@
         // Implementations
 
         function login(userCredentials) {
-            var promise = $q(function (resolve, reject) {
+            return $q(function (resolve, reject) {
                 var userLoggedIn = function (user) {
                     console.info('login', user);
 
                     state.user = user;
 
                     resolve(user);
+
+                    Notify.show({
+                        template: 'Добро пожаловать, <%- data.name %>!',
+                        type: 'success',
+                        data: user
+                    });
                 };
                 var gotError = function (error) {
                     console.warn('login error', error);
 
                     reject(error);
-                };
 
-                Backendless.UserService.login(userCredentials.email, userCredentials.password, true, new Backendless.Async(userLoggedIn, gotError));
-            });
-
-            var message = {
-                template: null,
-                type: null,
-                data: null
-            };
-
-            promise
-                .then(function (user) {
-                    _.assign(message, {
-                        template: 'Добро пожаловать, <%- data.name %>!',
-                        type: 'success',
-                        data: user
-                    });
-                })
-                .catch(function (error) {
-                    _.assign(message, {
+                    Notify.show({
                         template: '[<%- data.code %>] <%- data.message %>',
                         type: 'error',
                         data: error
                     });
-                })
-                .finally(function () {
-                    var messageContent = _.template(message.template)({data: message.data});
+                };
 
-                    $mdToast.show(
-                        $mdToast.simple()
-                            .content(messageContent)
-                            .position('top right')
-                            .theme(message.type)
-                            .hideDelay(10000)
-                    );
-                });
-
-            return promise;
+                Backendless.UserService.login(userCredentials.email, userCredentials.password, true, new Backendless.Async(userLoggedIn, gotError));
+            });
         }
 
         function userTokenIsValid() {

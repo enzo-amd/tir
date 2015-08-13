@@ -1,43 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="application">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" lang="en">
     <title></title>
 
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/angular-treasure-overlay-spinner/src/treasure-overlay-spinner.css" />
+
+    <link rel="stylesheet" href="dist/stylesheets/app.css" />
+
 
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
 
     <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
+
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-treasure-overlay-spinner/src/treasure-overlay-spinner.js"></script>
 
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 
     <script src="bower_components/backendless/JS_SDK_Backendless/backendless.js"></script>
-    <script src="app.js"></script>
-    <script src="templates.js"></script>
+
+    <script src="dist/app.js"></script>
+    <script src="dist/templates.js"></script>
 </head>
-<body ng-app="app" ng-cloak>
+<body ng-cloak>
 <md-content>
 
     <!-- The top toolbar -->
     <md-toolbar>
         <div class="md-toolbar-tools">
             <md-button class="md-icon-button" aria-label="Settings">
-                <md-icon md-svg-icon="./bower_components/material-design-icons/maps/svg/design/ic_local_airport_24px.svg"></md-icon>
-                <md-icon md-svg-icon="social:android" aria-label="android "></md-icon>
-                <md-icon md-svg-icon="action:settings" aria-label="settings "></md-icon>
+                <md-icon md-svg-icon="./bower_components/material-design-icons/action/svg/design/ic_settings_24px.svg"></md-icon>
             </md-button>
             <h2>
-                <span class="md-title">Get Lost!</span>
+                <span class="md-title">Система управления тиром</span>
             </h2>
         </div>
     </md-toolbar>
@@ -45,8 +50,8 @@
 
 
     <div shoot-session-list></div>
+    <main ui-view></main>
 
-    <div ng-view></div>
 
 </md-content>
 </body>

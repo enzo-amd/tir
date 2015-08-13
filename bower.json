@@ -26,11 +26,12 @@
     "angular-bootstrap": "~0.13.3",
     "jquery": "~2.1.4",
     "angular-route": "~1.4.3",
-    "angular-cookies": "~1.4.3",
     "angular-animate": "~1.4.3",
     "angular-material": "~0.10.0",
     "bootstrap": "~3.3.5",
     "angular-aria": "~1.4.3",
-    "material-design-icons": "~2.0.0"
+    "material-design-icons": "~2.0.0",
+    "angular-ui-router": "~0.2.15",
+    "angular-treasure-overlay-spinner": "~1.1.0"
   }
 }

@@ -3,32 +3,48 @@
 
     module.controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$location'/*, 'AuthenticationService', 'FlashService'*/];
-    function LoginController($location/*, AuthenticationService, FlashService*/) {
+    function LoginController(Auth) {
         var vm = this;
 
-        vm.login = login;
 
-        /*(function initController() {
-            // reset login status
-            AuthenticationService.ClearCredentials();
-        })();*/
+        var userCredentials = {
+            email: 'user1@mail.com',
+            password: '123456789'
+        };
+
+
+        // Pass fields to the View
+        _.assign(vm, {
+            userCredentials: userCredentials,
+            spinner: {
+                active: false
+            }
+        });
+
+
+        // Pass methods to the View
+        _.assign(vm, {
+            login: login
+        });
+
+
+
+        // Implementations
 
         function login() {
-            vm.dataLoading = true;
+            vm.spinner.active = true;
 
             console.log('auth');
 
-            /*AuthenticationService.Login(vm.username, vm.password, function (response) {
-                if (response.success) {
-                    AuthenticationService.SetCredentials(vm.username, vm.password);
-                    $location.path('/');
-                } else {
-                    FlashService.Error(response.message);
-                    vm.dataLoading = false;
-                }
-            });*/
+            Auth.login(vm.userCredentials)
+                .then(function pass() {
+
+                })
+                .finally(function () {
+                    vm.spinner.active = false;
+                });
         }
+
     }
 
-})(angular.module('app'));
+})(angular.module('application'));

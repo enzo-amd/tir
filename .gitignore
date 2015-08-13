@@ -13,3 +13,5 @@ node_modules
 
 app.js
 templates.js
+
+dist

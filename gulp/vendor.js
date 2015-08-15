@@ -1,64 +1,68 @@
-var _           = require('lodash');
-var gulp        = require('gulp');
-var concat      = require('gulp-concat');
-var uglify      = require('gulp-uglify');
-var bowerFiles  = require('main-bower-files');
+var _ = require('lodash');
+var gulp = require('gulp');
+var filter = require('gulp-filter');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var minifyCss = require('gulp-minify-css');
+var bowerFiles = require('main-bower-files');
+var sourcemaps = require('gulp-sourcemaps');
 
-var paths       = require('./paths').paths;
-var bowerPaths  = require('./paths').bowerPaths;
+var paths = require('./paths').paths;
+var bowerPaths = require('./paths').bowerPaths;
 
-function setJQueryFirst(files) {
-  var jqueryPath = _.find(files, function(path) {
-    return path.match(/jquery.js$/);
-  });
-  if (jqueryPath) {
-    var index = files.indexOf(jqueryPath);
-    files.splice(index, 1);
-    files.unshift(jqueryPath);
-  }
+var _bowerFiles;
+function getBowerFiles() {
+    return _bowerFiles = _bowerFiles || bowerFiles({
+            paths: bowerPaths
+        });
 }
 
-gulp.task('vendorjs', function() {
-  var files = bowerFiles({
-    paths: bowerPaths,
-    filter: function(path) {
-      return path.substr(-3) === '.js' && path.substr(-6) !== 'min.js';
+function setJQueryFirst(files) {
+    var jqueryPath = _.find(files, function (path) {
+        return path.match(/jquery.js$/);
+    });
+    if (jqueryPath) {
+        var index = files.indexOf(jqueryPath);
+        files.splice(index, 1);
+        files.unshift(jqueryPath);
     }
-  });
-  setJQueryFirst(files);
-  return gulp.src(files)
-    .pipe(concat('vendor.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest(paths.distrib + '/javascripts'));
+}
+
+gulp.task('vendorjs', function () {
+    var files = getBowerFiles();
+    setJQueryFirst(files);
+
+    var jsFilter = filter(['*.js']);
+
+    return gulp.src(files)
+        .pipe(jsFilter)
+        .pipe(sourcemaps.init())
+        .pipe(uglify())
+        .pipe(concat('vendor.js'))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(paths.distJs));
 });
 
-gulp.task('hand', function() {
-  return gulp.src('./javascripts/hand/Physics2DPlugin.min.js')
-    .pipe(gulp.dest(paths.distrib + '/javascripts'));
+gulp.task('vendorcss', function () {
+    var files = getBowerFiles();
+    var cssFilter = filter(['*.css']);
+
+    return gulp.src(files)
+        .pipe(cssFilter)
+        .pipe(sourcemaps.init())
+        .pipe(minifyCss())
+        .pipe(concat('vendor.css'))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(paths.distCss));
 });
 
-gulp.task('vendorcss', function() {
-  var files = bowerFiles({
-    paths: bowerPaths,
-    filter: function(path) {
-      return path.indexOf('.css') >= 0;
-    }
-  });
-  return gulp.src(files)
-    .pipe(concat('vendor.css'))
-    .pipe(gulp.dest(paths.distrib + '/stylesheets'));
+gulp.task('vendorfonts', function () {
+    var files = getBowerFiles();
+    var fontFilter = filter(['*.{eot, woff2, woff, ttf, svg}']);
+
+    return gulp.src(files)
+        .pipe(fontFilter)
+        .pipe(gulp.dest(paths.distFonts));
 });
 
-gulp.task('vendorfonts', function() {
-  var files = bowerFiles({
-    paths: bowerPaths,
-    filter: function(path) {
-      return path.indexOf('.eot') >= 0 ||
-        path.indexOf('.woff') >= 0 ||
-        path.indexOf('.ttf') >= 0 ||
-        path.indexOf('.svg') >= 0;
-    }
-  });
-  return gulp.src(files)
-    .pipe(gulp.dest(paths.distrib + '/fonts'));
-});
+gulp.task('vendor', ['vendorjs', 'vendorcss', 'vendorfonts']);

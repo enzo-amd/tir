@@ -4,7 +4,7 @@
 
 (function (module) {
 
-    module.service('Auth', function ($q, $state, Notify) {
+    module.service('Auth', function ($q, $state, Notify, Backend) {
 
         var state = {
             user: null
@@ -14,34 +14,31 @@
         // Implementations
 
         function login(userCredentials) {
-            return $q(function (resolve, reject) {
-                var userLoggedIn = function (user) {
-                    console.info('login', user);
+            var promise = Backend.call('UserService.login', userCredentials.email, userCredentials.password, true);
 
-                    state.user = user;
+            promise.then(function (user) {
+                console.info('login', user);
 
-                    resolve(user);
-
-                    Notify.show({
-                        template: 'Добро пожаловать, <%- data.name %>!',
-                        type: 'success',
-                        data: user
-                    });
-                };
-                var gotError = function (error) {
-                    console.warn('login error', error);
-
-                    reject(error);
-
-                    Notify.show({
-                        template: '[<%- data.code %>] <%- data.message %>',
-                        type: 'error',
-                        data: error
-                    });
-                };
-
-                Backendless.UserService.login(userCredentials.email, userCredentials.password, true, new Backendless.Async(userLoggedIn, gotError));
+                Notify.show({
+                    template: 'Добро пожаловать, <%- data.name %>!',
+                    type: 'success',
+                    data: user
+                });
             });
+
+            return promise;
+        }
+
+        function logout() {
+            var promise = Backend.call('UserService.logout');
+
+            promise.then(function () {
+                console.info('logout');
+
+                $state.go('login');
+            });
+
+            return promise;
         }
 
         function userTokenIsValid() {
@@ -73,6 +70,7 @@
             state: state,
 
             login: login,
+            logout: logout,
             isLoggedIn: isLoggedIn,
             showLogin: showLogin
         };

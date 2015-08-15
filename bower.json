@@ -30,13 +30,15 @@
     "angular-aria": "~1.4.3",
     "material-design-icons": "~2.0.0",
     "angular-ui-router": "~0.2.15",
-    "angular-treasure-overlay-spinner": "~1.1.0",
-    "ManUp.js": "https://github.com/boyofgreen/ManUp.js.git"
+    "angular-treasure-overlay-spinner": "~1.1.0"
   },
   "overrides": {
-    "ManUp.js": {
+    "material-design-icons": {
       "main": [
-        "manup.js"
+        "iconfont/MaterialIcons-Regular.eot",
+        "iconfont/MaterialIcons-Regular.ttf",
+        "iconfont/MaterialIcons-Regular.woff",
+        "iconfont/MaterialIcons-Regular.woff2"
       ]
     }
   }

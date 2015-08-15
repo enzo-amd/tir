@@ -58,7 +58,7 @@ gulp.task('vendorcss', function () {
 
 gulp.task('vendorfonts', function () {
     var files = getBowerFiles();
-    var fontFilter = filter(['*.{eot, woff2, woff, ttf, svg}']);
+    var fontFilter = filter(['*.{eot,woff2,woff,ttf,svg}']);
 
     return gulp.src(files)
         .pipe(fontFilter)

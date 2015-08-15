@@ -19,7 +19,7 @@ require('./gulp/vendor');
 
 // Tasks
 
-gulp.task('js', function () {
+gulp.task('appjs', function () {
     gulp.src(['src/**/module.js'].concat(paths.js))
         .pipe(sourcemaps.init())
         .pipe(concat(paths.distJs + '/app.js'))
@@ -57,10 +57,10 @@ gulp.task('appcss', function() {
         })*/;
 });
 
-gulp.task('default', ['js', 'templates', 'appcss']);
+gulp.task('default', ['appjs', 'templates', 'appcss']);
 
 gulp.task('watch', ['default'], function () {
-    gulp.watch('src/**/*.js', ['js']);
+    gulp.watch('src/**/*.js', ['appjs']);
     gulp.watch('src/**/*.view.html', ['templates']);
     gulp.watch('src/stylesheets/**/*.less', ['appcss']);
 });

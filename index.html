@@ -11,21 +11,18 @@
     <link rel="stylesheet" href="dist/stylesheets/vendor.css" />
     <link rel="stylesheet" href="dist/stylesheets/app.css" />
 
-    <script src="cordova.js"></script>
-    <script src="phonegap.js"></script>
-
     <script src="dist/javascripts/vendor.js"></script>
     <script src="dist/javascripts/app.js"></script>
     <script src="dist/javascripts/templates.js"></script>
 </head>
 <body ng-cloak>
-<md-content>
-
+<div layout="column">
     <!-- The top toolbar -->
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings">
-                <md-icon md-svg-icon="./bower_components/material-design-icons/action/svg/design/ic_settings_24px.svg"></md-icon>
+            <md-button class="md-icon-button" aria-label="Меню">
+                <md-icon>more_vert</md-icon>
+                <md-tooltip>Меню</md-tooltip>
             </md-button>
             <h2>
                 <span class="md-title">Система управления тиром</span>
@@ -33,10 +30,20 @@
         </div>
     </md-toolbar>
 
+    <section layout="row" flex>
 
-    <main ui-view></main>
+        <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="true">
+            <div main-menu></div>
+        </md-sidenav>
 
 
-</md-content>
+        <md-content flex>
+            <main ui-view></main>
+        </md-content>
+
+    </section>
+</div>
+
+
 </body>
 </html>

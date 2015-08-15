@@ -30,6 +30,14 @@
     "angular-aria": "~1.4.3",
     "material-design-icons": "~2.0.0",
     "angular-ui-router": "~0.2.15",
-    "angular-treasure-overlay-spinner": "~1.1.0"
+    "angular-treasure-overlay-spinner": "~1.1.0",
+    "ManUp.js": "https://github.com/boyofgreen/ManUp.js.git"
+  },
+  "overrides": {
+    "ManUp.js": {
+      "main": [
+        "manup.js"
+      ]
+    }
   }
 }

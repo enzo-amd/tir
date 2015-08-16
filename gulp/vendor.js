@@ -2,9 +2,6 @@ var _ = require('lodash');
 var gulp = require('gulp');
 var filter = require('gulp-filter');
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var minifyCss = require('gulp-minify-css');
-var bowerFiles = require('main-bower-files');
 var sourcemaps = require('gulp-sourcemaps');
 
 var paths = require('./paths').paths;
@@ -12,6 +9,8 @@ var bowerPaths = require('./paths').bowerPaths;
 
 var _bowerFiles;
 function getBowerFiles() {
+    var bowerFiles = require('main-bower-files');
+
     return _bowerFiles = _bowerFiles || bowerFiles({
             paths: bowerPaths
         });
@@ -28,7 +27,9 @@ function setJQueryFirst(files) {
     }
 }
 
-gulp.task('vendorjs', function () {
+gulp.task('vendor-js', function () {
+    var uglify = require('gulp-uglify');
+
     var files = getBowerFiles();
     setJQueryFirst(files);
 
@@ -43,7 +44,9 @@ gulp.task('vendorjs', function () {
         .pipe(gulp.dest(paths.distJs));
 });
 
-gulp.task('vendorcss', function () {
+gulp.task('vendor-css', function () {
+    var minifyCss = require('gulp-minify-css');
+
     var files = getBowerFiles();
     var cssFilter = filter(['*.css']);
 
@@ -56,7 +59,7 @@ gulp.task('vendorcss', function () {
         .pipe(gulp.dest(paths.distCss));
 });
 
-gulp.task('vendorfonts', function () {
+gulp.task('vendor-fonts', function () {
     var files = getBowerFiles();
     var fontFilter = filter(['*.{eot,woff2,woff,ttf,svg}']);
 
@@ -65,4 +68,6 @@ gulp.task('vendorfonts', function () {
         .pipe(gulp.dest(paths.distFonts));
 });
 
-gulp.task('vendor', ['vendorjs', 'vendorcss', 'vendorfonts']);
+gulp.task('vendor', ['vendor-js', 'vendor-css', 'vendor-fonts']);
+
+gulp.task('z', []);

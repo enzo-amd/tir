@@ -6,11 +6,7 @@ var _ = require('lodash');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
-var less = require('gulp-less');
 //var uglify = require('gulp-uglify');
-var ngAnnotate = require('gulp-ng-annotate');
-var templateCache = require('gulp-angular-templatecache');
-var autoprefixer = require('gulp-autoprefixer');
 var runSequence = require('run-sequence');
 var clean = require('gulp-clean');
 
@@ -28,6 +24,8 @@ gulp.task('clean', function () {
 });
 
 gulp.task('app-js', function () {
+    var ngAnnotate = require('gulp-ng-annotate');
+
     gulp.src(['src/**/module.js'].concat(paths.js))
         .pipe(sourcemaps.init())
         .pipe(concat(paths.distJs + '/app.js'))
@@ -39,6 +37,8 @@ gulp.task('app-js', function () {
 
 
 gulp.task('templates', function () {
+    var templateCache = require('gulp-angular-templatecache');
+
     return gulp.src('src/**/*.view.html')
         .pipe(templateCache(paths.distJs + '/templates.js', {
             root: ''
@@ -53,7 +53,12 @@ gulp.task('index.html', function () {
 });
 
 gulp.task('app-css', function() {
+    var autoprefixer = require('gulp-autoprefixer');
+    var less = require('gulp-less');
+    var cssMin = require('gulp-minify-css');
+
     return gulp.src(paths.stylesheets)
+        .pipe(sourcemaps.init())
         .pipe(less({
             paths: paths.stylesheetIncludes
         }))
@@ -61,6 +66,8 @@ gulp.task('app-css', function() {
             browsers: ['last 4 versions', 'ie 10'],
             cascade: false
         }))
+        .pipe(cssMin())
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(paths.distCss))
         /*.on('error', function(err) {
             gutil.beep();
@@ -71,7 +78,85 @@ gulp.task('app-css', function() {
         })*/;
 });
 
-gulp.task('app', ['app-js', 'templates', 'app-css', 'index.html']);
+/*gulp.task('app-img', function () {
+    var imageResize = require('gulp-image-resize');
+    var rename = require('gulp-rename');
+    var index = 1;
+
+    gulp.src(paths.images)
+        .pipe(imageResize({
+            imageMagick: true,
+            width: 500,
+            crop: false,
+            upscale: false,
+            format: 'jpeg'
+        }))
+        .pipe(rename(function (path) {
+            path.basename = 'gun-' + index;
+            index++;
+        }))
+        .pipe(gulp.dest(paths.distImages));
+});*/
+
+
+gulp.task('sprites', function (callback) {
+    var merge2 = require('merge2');
+    var spritesmith = require('gulp.spritesmith');
+    var imagemin = require('gulp-imagemin');
+
+    var spritePacks = [
+        {
+            name: 'weapons',
+            format: 'jpg'
+        }
+    ];
+    var testStreams = [];
+    var streams = _.transform(spritePacks, function (streams, spritePack) {
+        var imgFileName = spritePack.name + '.sprite.' + spritePack.format;
+        var cssFileName = spritePack.name + '.less';
+
+        var spritesData = gulp.src(['src/images/sprites/' + spritePack.name + '/*'])
+            .pipe(spritesmith({
+                imgName: imgFileName,
+                cssName: cssFileName,
+                imgPath: '../images/' + imgFileName,
+                algorithm: 'binary-tree'
+            }));
+
+        streams.push([
+            spritesData.img
+                .pipe(imagemin())
+                .pipe(gulp.dest(paths.distImages)),
+            spritesData.css
+                .pipe(gulp.dest(paths.stylesheetIncludes + '/sprites'))
+        ]);
+
+        testStreams.push({
+            mask: 'src/images/sprites/' + spritePack.name + '/*',
+            imgFileName: imgFileName,
+            cssFileName: cssFileName
+        });
+    }, []);
+
+    console.log(testStreams);
+
+    streams.unshift(
+        gulp.src(paths.stylesheetIncludes + '/sprites/*', {read: false})
+            .pipe(clean())
+    );
+
+    return merge2.apply(merge2, streams);
+});
+
+
+gulp.task('app', function (callback) {
+    runSequence(
+        ['app-js', 'templates', 'sprites'],
+        'app-css',
+        'index.html',
+        callback
+    );
+});
 
 
 gulp.task('build', function (callback) {

@@ -11,4 +11,5 @@ gen
 bower_components
 node_modules
 /dist
+/src/stylesheets/includes/sprites
 /.publish

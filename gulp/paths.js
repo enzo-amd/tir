@@ -3,6 +3,7 @@ var paths = {
     distJs: 'dist/javascripts',
     distCss: 'dist/stylesheets',
     distFonts: 'dist/fonts',
+    distImages: 'dist/images',
     //cdn: '../tmp',
     //controllers: 'src/common/javascripts/controllers/*.js',
     //services: ['src/app/services/services.js', 'src/app/services/*Service.js'],
@@ -11,7 +12,8 @@ var paths = {
     //templates: ['src/app/templates/**/*.html', 'src/app/modules/**/*.html'],
     js: ['src/**/*.js'],
     stylesheets: ['src/stylesheets/*.less'],
-    stylesheetIncludes: ['src/stylesheets/includes']
+    stylesheetIncludes: ['src/stylesheets/includes'],
+    images: ['src/images/**/*.{jpg,jpeg,JPG,png,gif}']
 };
 
 var prod = {

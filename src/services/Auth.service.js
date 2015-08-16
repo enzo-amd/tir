@@ -30,10 +30,12 @@
         }
 
         function logout() {
-            var promise = Backend.call('UserService.logout');
+            var promise = isLoggedIn() ? Backend.call('UserService.logout') : $q.when(true);
 
             promise.then(function () {
                 console.info('logout');
+
+                state.user = null;
 
                 $state.go('login');
             });

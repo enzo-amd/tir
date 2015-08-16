@@ -19,7 +19,7 @@
      });*/
 
 
-    function config($stateProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
+    function config($stateProvider, $locationProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
 
         $mdIconProvider
           //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
@@ -30,22 +30,22 @@
         $mdThemingProvider.theme('error');
 
 
-        $urlRouterProvider.otherwise('/notfound');
+        $urlRouterProvider.otherwise('home');
 
         $stateProvider
-          .state('home', {
-              url: '/', templateUrl: 'modules/home/templates/home.view.html',
-              controller: 'HomeController',
-              controllerAs: 'vm',
-              access: {
-                  loginRequired: true
-              }
-          })
-          .state('login', {
-              url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
-              controller: 'LoginController',
-              controllerAs: 'vm'
-          })
+            .state('home', {
+                url: '/', templateUrl: 'modules/home/templates/home.view.html',
+                controller: 'HomeController',
+                controllerAs: 'vm',
+                access: {
+                    loginRequired: true
+                }
+            })
+            .state('login', {
+                url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
+                controller: 'LoginController',
+                controllerAs: 'vm'
+            })
         ;
 
 
@@ -82,9 +82,9 @@
         //    }
         //}]);
 
-        //$locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(true);
     }
-    config.$inject = ["$stateProvider", "$urlRouterProvider", "$mdIconProvider", "$mdThemingProvider"];
+    config.$inject = ["$stateProvider", "$locationProvider", "$urlRouterProvider", "$mdIconProvider", "$mdThemingProvider"];
 
     function run($rootScope, $state, $stateParams, Util, Auth) {
 
@@ -152,10 +152,12 @@
         }
 
         function logout() {
-            var promise = Backend.call('UserService.logout');
+            var promise = isLoggedIn() ? Backend.call('UserService.logout') : $q.when(true);
 
             promise.then(function () {
                 console.info('logout');
+
+                state.user = null;
 
                 $state.go('login');
             });
@@ -546,6 +548,8 @@
             password: '123456789'
         };
 
+        var logoutPromise = Auth.logout();
+
 
         // Pass fields to the View
         _.assign(vm, {
@@ -569,13 +573,15 @@
         (function () {
             vm.spinner.active = true;
 
-            Tirs.getTirs()
-              .then(function (tirs) {
-                  Tirs.state.tir = Tirs.state.tir || tirs[0];
-              })
-              .finally(function () {
-                  vm.spinner.active = false;
-              });
+            logoutPromise.then(function () {
+                return Tirs.getTirs()
+                    .then(function (tirs) {
+                        Tirs.state.tir = Tirs.state.tir || tirs[0];
+                    });
+            })
+                .finally(function () {
+                    vm.spinner.active = false;
+                });
         })();
 
 
@@ -612,20 +618,76 @@
 
 (function (module) {
 
-    console.log('a');
-
     module.directive('mainMenu', function () {
         return {
             templateUrl: 'modules/main-menu/tpl/main-menu.view.html',
             scope: {},
-            controller: ["$scope", "$element", function ($scope, $element) {
+            controller: ["$scope", "$element", "$rootScope", "$mdSidenav", "Auth", function ($scope, $element, $rootScope, $mdSidenav, Auth) {
+
+                // Pass fields to the $scope
+                _.assign($scope, {
+
+                });
+
+                // Pass methods to the $scope
+                _.assign($scope, {
+                    toggle: toggle,
+                    logout: logout
+                });
 
 
+                // Implementations
 
+                function toggle(state) {
+                    var mdSidenav = $mdSidenav('main-menu');
+
+                    state = _.isUndefined(state) ? !mdSidenav.isOpen() : !!state;
+
+                    var method = state ? 'open' : 'close';
+
+                    mdSidenav[method]();
+                }
+
+                function logout() {
+                    Auth.logout().then(function () {
+                        toggle(false);
+                    });
+                }
+
+
+                // Watchers
+
+                $rootScope.$on('mainMenu.toggle', function (event, state) {
+                    toggle(state);
+                });
             }]
         };
     });
 
 })(angular.module('application'));
 
+/**
+ * Created by YuraVika on 16.08.2015.
+ */
+
+(function (module) {
+
+    module.controller('MainToolbarController', ["$rootScope", function ($rootScope) {
+        var vm = this;
+
+        _.assign(vm, {
+           toggleMainMenu:  toggleMainMenu
+        });
+
+
+        // Implementations
+
+        function toggleMainMenu(state) {
+            $rootScope.$emit('mainMenu.toggle', state);
+        }
+
+    }]);
+
+
+})(angular.module('application'));
 //# sourceMappingURL=../../dist/javascripts/app.js.map

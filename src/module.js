@@ -19,7 +19,7 @@
      });*/
 
 
-    function config($stateProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
+    function config($stateProvider, $locationProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
 
         $mdIconProvider
           //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
@@ -30,22 +30,22 @@
         $mdThemingProvider.theme('error');
 
 
-        $urlRouterProvider.otherwise('/notfound');
+        $urlRouterProvider.otherwise('home');
 
         $stateProvider
-          .state('home', {
-              url: '/', templateUrl: 'modules/home/templates/home.view.html',
-              controller: 'HomeController',
-              controllerAs: 'vm',
-              access: {
-                  loginRequired: true
-              }
-          })
-          .state('login', {
-              url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
-              controller: 'LoginController',
-              controllerAs: 'vm'
-          })
+            .state('home', {
+                url: '/', templateUrl: 'modules/home/templates/home.view.html',
+                controller: 'HomeController',
+                controllerAs: 'vm',
+                access: {
+                    loginRequired: true
+                }
+            })
+            .state('login', {
+                url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
+                controller: 'LoginController',
+                controllerAs: 'vm'
+            })
         ;
 
 
@@ -82,7 +82,7 @@
         //    }
         //}]);
 
-        //$locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(true);
     }
 
     function run($rootScope, $state, $stateParams, Util, Auth) {

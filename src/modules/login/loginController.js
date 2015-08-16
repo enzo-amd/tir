@@ -12,6 +12,8 @@
             password: '123456789'
         };
 
+        var logoutPromise = Auth.logout();
+
 
         // Pass fields to the View
         _.assign(vm, {
@@ -35,13 +37,15 @@
         (function () {
             vm.spinner.active = true;
 
-            Tirs.getTirs()
-              .then(function (tirs) {
-                  Tirs.state.tir = Tirs.state.tir || tirs[0];
-              })
-              .finally(function () {
-                  vm.spinner.active = false;
-              });
+            logoutPromise.then(function () {
+                return Tirs.getTirs()
+                    .then(function (tirs) {
+                        Tirs.state.tir = Tirs.state.tir || tirs[0];
+                    });
+            })
+                .finally(function () {
+                    vm.spinner.active = false;
+                });
         })();
 
 

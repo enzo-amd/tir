@@ -15,6 +15,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var paths = require('./gulp/paths').paths;
 
 require('./gulp/vendor');
+require('./gulp/gh-pages');
 
 
 // Tasks
@@ -38,6 +39,12 @@ gulp.task('templates', function () {
         .pipe(gulp.dest('.'));
 });
 
+
+gulp.task('index.html', function () {
+    return gulp.src('index.html')
+        .pipe(gulp.dest(paths.dist));
+});
+
 gulp.task('appcss', function() {
     return gulp.src(paths.stylesheets)
         .pipe(less({
@@ -57,12 +64,13 @@ gulp.task('appcss', function() {
         })*/;
 });
 
-gulp.task('default', ['appjs', 'templates', 'appcss']);
+gulp.task('default', ['appjs', 'templates', 'appcss', 'index.html']);
 
 gulp.task('watch', ['default'], function () {
     gulp.watch('src/**/*.js', ['appjs']);
     gulp.watch('src/**/*.view.html', ['templates']);
     gulp.watch('src/stylesheets/**/*.less', ['appcss']);
+    gulp.watch('index.html', ['index.html']);
 });
 
 

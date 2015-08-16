@@ -10,5 +10,5 @@ gen
 
 bower_components
 node_modules
-
-#dist
+/dist
+/.publish

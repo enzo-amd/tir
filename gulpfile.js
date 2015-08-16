@@ -11,6 +11,8 @@ var less = require('gulp-less');
 var ngAnnotate = require('gulp-ng-annotate');
 var templateCache = require('gulp-angular-templatecache');
 var autoprefixer = require('gulp-autoprefixer');
+var runSequence = require('run-sequence');
+var clean = require('gulp-clean');
 
 var paths = require('./gulp/paths').paths;
 
@@ -20,7 +22,12 @@ require('./gulp/gh-pages');
 
 // Tasks
 
-gulp.task('appjs', function () {
+gulp.task('clean', function () {
+    return gulp.src(paths.dist, {read: false})
+        .pipe(clean());
+});
+
+gulp.task('app-js', function () {
     gulp.src(['src/**/module.js'].concat(paths.js))
         .pipe(sourcemaps.init())
         .pipe(concat(paths.distJs + '/app.js'))
@@ -45,7 +52,7 @@ gulp.task('index.html', function () {
         .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('appcss', function() {
+gulp.task('app-css', function() {
     return gulp.src(paths.stylesheets)
         .pipe(less({
             paths: paths.stylesheetIncludes
@@ -64,13 +71,20 @@ gulp.task('appcss', function() {
         })*/;
 });
 
-gulp.task('default', ['appjs', 'templates', 'appcss', 'index.html']);
+gulp.task('app', ['app-js', 'templates', 'app-css', 'index.html']);
 
-gulp.task('watch', ['default'], function () {
-    gulp.watch('src/**/*.js', ['appjs']);
-    gulp.watch('src/**/*.view.html', ['templates']);
-    gulp.watch('src/stylesheets/**/*.less', ['appcss']);
-    gulp.watch('index.html', ['index.html']);
+
+gulp.task('build', function (callback) {
+    runSequence('clean',
+        'vendor',
+        'app',
+        callback);
 });
 
 
+gulp.task('watch-app', ['app'], function () {
+    gulp.watch('src/**/*.js', ['app-js']);
+    gulp.watch('src/**/*.view.html', ['templates']);
+    gulp.watch('src/stylesheets/**/*.less', ['app-css']);
+    gulp.watch('index.html', ['index.html']);
+});

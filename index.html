@@ -4,36 +4,46 @@
     <meta charset="utf-8" lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
     <meta name="fragment" content="!">
-    <!--<base href="/">-->
+    <base href="/">
 
     <title></title>
 
-    <link rel="stylesheet" href="vendor.css" />
-    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="dist/stylesheets/vendor.css" />
+    <link rel="stylesheet" href="dist/stylesheets/app.css" />
 
-    <script src="vendor.js"></script>
-    <script src="app.js"></script>
-    <script src="templates.js"></script>
+    <script src="dist/javascripts/vendor.js"></script>
+    <script src="dist/javascripts/app.js"></script>
+    <script src="dist/javascripts/templates.js"></script>
 </head>
 <body ng-cloak>
-<md-content>
-
+<div layout="column">
     <!-- The top toolbar -->
-    <md-toolbar>
+    <md-toolbar ng-controller="MainToolbarController as vm">
         <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings">
-                <md-icon md-svg-icon="./bower_components/material-design-icons/action/svg/design/ic_settings_24px.svg"></md-icon>
+            <md-button class="md-icon-button" aria-label="Меню" ng-click="vm.toggleMainMenu()">
+                <md-icon>more_vert</md-icon>
+                <md-tooltip>Меню</md-tooltip>
             </md-button>
-            <h2>
+            <h1>
                 <span class="md-title">Система управления тиром</span>
-            </h2>
+            </h1>
         </div>
     </md-toolbar>
 
+    <section layout="row" flex>
 
-    <main ui-view></main>
+        <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="main-menu">
+            <div main-menu></div>
+        </md-sidenav>
 
 
-</md-content>
+        <md-content flex>
+            <main ui-view></main>
+        </md-content>
+
+    </section>
+</div>
+
+
 </body>
 </html>

@@ -19,7 +19,7 @@
      });*/
 
 
-    function config($stateProvider, $httpProvider, $locationProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
+    function config($stateProvider, $locationProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
 
         $mdIconProvider
           //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
@@ -30,22 +30,22 @@
         $mdThemingProvider.theme('error');
 
 
-        $urlRouterProvider.otherwise('/notfound');
+        $urlRouterProvider.otherwise('home');
 
         $stateProvider
-          .state('home', {
-              url: '/', templateUrl: 'modules/home/templates/home.view.html',
-              controller: 'HomeController',
-              controllerAs: 'vm',
-              access: {
-                  loginRequired: true
-              }
-          })
-          .state('login', {
-              url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
-              controller: 'LoginController',
-              controllerAs: 'vm'
-          })
+            .state('home', {
+                url: '/', templateUrl: 'modules/home/templates/home.view.html',
+                controller: 'HomeController',
+                controllerAs: 'vm',
+                access: {
+                    loginRequired: true
+                }
+            })
+            .state('login', {
+                url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
+                controller: 'LoginController',
+                controllerAs: 'vm'
+            })
         ;
 
 
@@ -82,9 +82,9 @@
         //    }
         //}]);
 
-        //$locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(true);
     }
-    config.$inject = ["$stateProvider", "$httpProvider", "$locationProvider", "$urlRouterProvider", "$mdIconProvider", "$mdThemingProvider"];
+    config.$inject = ["$stateProvider", "$locationProvider", "$urlRouterProvider", "$mdIconProvider", "$mdThemingProvider"];
 
     function run($rootScope, $state, $stateParams, Util, Auth) {
 
@@ -152,10 +152,12 @@
         }
 
         function logout() {
-            var promise = Backend.call('UserService.logout');
+            var promise = isLoggedIn() ? Backend.call('UserService.logout') : $q.when(true);
 
             promise.then(function () {
                 console.info('logout');
+
+                state.user = null;
 
                 $state.go('login');
             });
@@ -287,7 +289,7 @@
 
 (function (module) {
 
-    module.service('Tirs', ["$q", "Notify", "Backend", function ($q, Notify, Backend) {
+    module.service('Tirs', ["$q", "Notify", function ($q, Notify) {
 
         var state = {
             tir: null,
@@ -364,21 +366,6 @@
                     Backendless.Persistence.of( Classes.Tirs ).find( new Backendless.Async(success, error) );
                 }
             });
-
-            /*var promise = Backend.call('Backendless.Persistence.of', Classes.Tirs);
-
-            promise.then(function (user) {
-                console.info('login', user);
-
-                Notify.show({
-                    template: 'Добро пожаловать, <%- data.name %>!',
-                    type: 'success',
-                    data: user
-                });
-            });
-
-            return promise;*/
-
         }
 
 
@@ -561,6 +548,8 @@
             password: '123456789'
         };
 
+        var logoutPromise = Auth.logout();
+
 
         // Pass fields to the View
         _.assign(vm, {
@@ -584,13 +573,15 @@
         (function () {
             vm.spinner.active = true;
 
-            Tirs.getTirs()
-              .then(function (tirs) {
-                  Tirs.state.tir = Tirs.state.tir || tirs[0];
-              })
-              .finally(function () {
-                  vm.spinner.active = false;
-              });
+            logoutPromise.then(function () {
+                return Tirs.getTirs()
+                    .then(function (tirs) {
+                        Tirs.state.tir = Tirs.state.tir || tirs[0];
+                    });
+            })
+                .finally(function () {
+                    vm.spinner.active = false;
+                });
         })();
 
 
@@ -621,116 +612,82 @@
     LoginController.$inject = ["$state", "Auth", "Util", "Tirs"];
 
 })(angular.module('application'));
+/**
+ * Created by YuraVika on 16.08.2015.
+ */
+
 (function (module) {
 
-    module.directive('shootSessionList', function () {
+    module.directive('mainMenu', function () {
         return {
+            templateUrl: 'modules/main-menu/tpl/main-menu.view.html',
             scope: {},
-            controller: ["$scope", "$element", "ShootSessions", function ($scope, $element, ShootSessions) {
-                console.log(ShootSessions);
+            controller: ["$scope", "$element", "$rootScope", "$mdSidenav", "Auth", function ($scope, $element, $rootScope, $mdSidenav, Auth) {
+
+                // Pass fields to the $scope
+                _.assign($scope, {
+
+                });
+
+                // Pass methods to the $scope
+                _.assign($scope, {
+                    toggle: toggle,
+                    logout: logout
+                });
 
 
-            }],
-            template: '<div>Hello!</div>'
+                // Implementations
+
+                function toggle(state) {
+                    var mdSidenav = $mdSidenav('main-menu');
+
+                    state = _.isUndefined(state) ? !mdSidenav.isOpen() : !!state;
+
+                    var method = state ? 'open' : 'close';
+
+                    mdSidenav[method]();
+                }
+
+                function logout() {
+                    Auth.logout().then(function () {
+                        toggle(false);
+                    });
+                }
+
+
+                // Watchers
+
+                $rootScope.$on('mainMenu.toggle', function (event, state) {
+                    toggle(state);
+                });
+            }]
         };
     });
 
 })(angular.module('application'));
+
+/**
+ * Created by YuraVika on 16.08.2015.
+ */
 
 (function (module) {
 
-    module.service('ShootSessions', function () {
+    module.controller('MainToolbarController', ["$rootScope", function ($rootScope) {
+        var vm = this;
+
+        _.assign(vm, {
+           toggleMainMenu:  toggleMainMenu
+        });
 
 
-        var Classes = {
-            ShootSessions: function ShootSessions(args) {
-                args = args || {};
-                this._private_relations = [
-                    "tir",
-                    "operator"];
-                this._private_geoRelations = [];
-                this._private_dates = [
-                    "startDate",
-                    "endDate",
-                    "created",
-                    "updated"];
-                this.___class = "ShootSessions";
+        // Implementations
 
-                this.gun = args.gun || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 256) - 1)));
+        function toggleMainMenu(state) {
+            $rootScope.$emit('mainMenu.toggle', state);
+        }
 
-                this.startDate = args.startDate || new Date();
+    }]);
 
-                this.endDate = args.endDate || new Date();
-
-                this.shots = args.shots || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
-
-                this.price = args.price || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
-
-                this.ownerId = args.ownerId || String(Math.abs(Math.floor(Math.random() * Math.pow(10, 500) - 1)));
-
-                this.won = args.won || false;
-
-                this.duration = args.duration || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
-
-                this.hits = args.hits || Number(Math.abs(Math.floor(Math.random() * Math.pow(10, 5) - 1)));
-
-                this.created = args.created || new Date();
-
-                this.updated = args.updated || new Date();
-
-                this.tir = args.tir || null;
-
-                this.operator = args.operator || null;
-
-                var storage = Backendless.Persistence.of(ShootSessions);
-
-                this.save = function (async) {
-                    delete this._private_relations;
-                    delete this._private_geoRelations;
-                    delete this._private_dates;
-                    storage.save(this, async);
-                };
-
-                this.remove = function (async) {
-                    var result = storage.remove(this, async);
-                    this.objectId = null;
-                    return result;
-                };
-
-                this.getTir = function () {
-                    if (this.tir == null)
-                        storage.loadRelations(this, ['tir']);
-
-                    return this.tir;
-                };
-
-                this.getOperator = function () {
-                    if (this.operator == null)
-                        storage.loadRelations(this, ['operator']);
-
-                    return this.operator;
-                };
-
-            }
-        };
-
-
-        return {
-            Classes: Classes,
-
-            login: function () {
-                var userLoggedIn = function (user) {
-                    console.log('login', user);
-                };
-                var gotError = function (error) {
-                    console.log('login error', error);
-                };
-
-                Backendless.UserService.login('user1@mail.com', '123456789', false, new Backendless.Async(userLoggedIn, gotError));
-            }
-        };
-    });
 
 })(angular.module('application'));
-
 //# sourceMappingURL=../../dist/javascripts/app.js.map

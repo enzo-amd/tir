@@ -30,7 +30,7 @@
         $mdThemingProvider.theme('error');
 
 
-        $urlRouterProvider.otherwise('home');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
             .state('home', {

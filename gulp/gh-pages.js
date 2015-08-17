@@ -7,9 +7,10 @@ var paths = require('./paths').paths;
 
 gulp.task('gh-pages', function() {
     var srcIndex = gulp.src(paths.dist + '/index.html')
-        .pipe(htmlreplace({
-            baseTag: '<base href="/tir/">'
-        }));
+        //.pipe(htmlreplace({
+        //    baseTag: '<base href="/tir/">'
+        //}))
+      ;
 
 
     return streamqueue({objectMode: true},

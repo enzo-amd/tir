@@ -1,6 +1,6 @@
 (function (module) {
 
-    module.service('Notify', function ($mdToast) {
+    module.service('Notify', function (/*$mdToast*/) {
 
 
         // Implementations
@@ -8,7 +8,7 @@
         function show(params) {
             var messageContent = params.template ? _.template(params.template)({data: params.data}) : params.content;
             var delay = params.delay || 10000;
-            var toast = $mdToast.simple()
+            /*var toast = $mdToast.simple()
               .content(messageContent)
               .position('top right')
               .hideDelay(delay);
@@ -17,7 +17,9 @@
                 toast.theme(params.type);
             }
 
-            $mdToast.show(toast);
+            $mdToast.show(toast);*/
+
+            console.log(messageContent);
         }
 
 

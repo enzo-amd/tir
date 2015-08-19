@@ -8,7 +8,7 @@
         return {
             templateUrl: 'modules/main-menu/tpl/main-menu.view.html',
             scope: {},
-            controller: function ($scope, $element, $rootScope, $mdSidenav, Auth) {
+            controller: function ($scope, $element, $rootScope, Auth) {
 
                 // Pass fields to the $scope
                 _.assign($scope, {
@@ -25,13 +25,13 @@
                 // Implementations
 
                 function toggle(state) {
-                    var mdSidenav = $mdSidenav('main-menu');
+                    /*var mdSidenav = $mdSidenav('main-menu');
 
                     state = _.isUndefined(state) ? !mdSidenav.isOpen() : !!state;
 
                     var method = state ? 'open' : 'close';
 
-                    mdSidenav[method]();
+                    mdSidenav[method]();*/
                 }
 
                 function logout() {

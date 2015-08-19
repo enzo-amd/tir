@@ -25,12 +25,9 @@
     "backendless": "*",
     "jquery": "~2.1.4",
     "angular-route": "~1.4.3",
-    "angular-animate": "~1.4.3",
-    "angular-material": "~0.10.0",
-    "angular-aria": "~1.4.3",
     "material-design-icons": "~2.0.0",
     "angular-ui-router": "~0.2.15",
-    "angular-treasure-overlay-spinner": "~1.1.0"
+    "mui": "~0.1.21"
   },
   "overrides": {
     "material-design-icons": {

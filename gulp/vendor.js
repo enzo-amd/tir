@@ -45,10 +45,12 @@ gulp.task('vendor-js', function () {
 });
 
 gulp.task('vendor-css', function () {
+    var merge2 = require('merge2');
     var minifyCss = require('gulp-minify-css');
 
     var files = getBowerFiles();
     var cssFilter = filter(['*.css']);
+
 
     return gulp.src(files)
         .pipe(cssFilter)

@@ -8,8 +8,8 @@
         'ui.router',
         //'ui.bootstrap',
         //'ngAnimate',
-        'ngMaterial',
-        'treasure-overlay-spinner',
+        //'ngMaterial',
+        //'treasure-overlay-spinner',
         'templates'
     ])
         .config(config)
@@ -19,15 +19,15 @@
      });*/
 
 
-    function config($stateProvider, $locationProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
+    function config($stateProvider, $urlRouterProvider) {
 
-        $mdIconProvider
-          //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
-          .iconSet('social', './bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24)
-          .defaultIconSet('./bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24);
+        //$mdIconProvider
+        //  //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
+        //  .iconSet('social', './bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24)
+        //  .defaultIconSet('./bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24);
 
-        $mdThemingProvider.theme('success');
-        $mdThemingProvider.theme('error');
+        //$mdThemingProvider.theme('success');
+        //$mdThemingProvider.theme('error');
 
 
         $urlRouterProvider.otherwise('/');

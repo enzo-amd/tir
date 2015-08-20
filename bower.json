@@ -37,6 +37,12 @@
         "iconfont/MaterialIcons-Regular.woff",
         "iconfont/MaterialIcons-Regular.woff2"
       ]
+    },
+    "mui": {
+      "main": [
+        "dist/css/mui.css",
+        "dist/js/mui.js"
+      ]
     }
   }
 }

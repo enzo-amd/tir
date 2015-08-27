@@ -34,7 +34,7 @@
 
         $stateProvider
             .state('home', {
-                url: '/', templateUrl: 'modules/home/templates/home.view.html',
+                url: '/', templateUrl: 'modules/home/tpl/home.view.html',
                 controller: 'HomeController',
                 controllerAs: 'vm',
                 access: {
@@ -42,7 +42,7 @@
                 }
             })
             .state('login', {
-                url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
+                url: '/login?from', templateUrl: 'modules/login/tpl/login.view.html',
                 controller: 'LoginController',
                 controllerAs: 'vm'
             })

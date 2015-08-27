@@ -38,17 +38,23 @@
 
 
 <div class="mui-container">
-    <div class="mui-panel">
-        <h1>Вход в систему</h1>
-        <button class="mui-btn mui-btn-primary mui-btn-raised">My Button</button>
-    </div>
-</div>
-
-<div class="mui-row">
-    <div class="mui-col-md-6 mui-col-md-offset-3 mui-col-xs-6">
+    <div class="mui-row">
         <div class="mui-panel">
-            <h1>Вход в систему</h1>
-            <button class="mui-btn mui-btn-primary mui-btn-raised">My Button</button>
+            <form name="loginForm" data-ng-submit="vm.login()">
+                <legend>Вход в систему</legend>
+
+                <div class="mui-form-group">
+                    <input type="email" class="mui-form-control" ng-model="vm.userCredentials.email" required>
+                    <label class="mui-form-floating-label">Логин</label>
+                </div>
+
+                <div class="mui-form-group">
+                    <input type="password" class="mui-form-control" ng-model="vm.userCredentials.password" required>
+                    <label class="mui-form-floating-label">Пароль</label>
+                </div>
+
+                <button type="submit" class="mui-btn mui-btn-primary mui-btn-raised">Войти</button>
+            </form>
         </div>
     </div>
 </div>

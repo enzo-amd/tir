@@ -12,7 +12,7 @@ var paths = {
     //templates: ['src/app/templates/**/*.html', 'src/app/modules/**/*.html'],
     js: ['src/**/*.js'],
     stylesheets: ['src/stylesheets/*.less'],
-    stylesheetIncludes: ['src/stylesheets/includes'],
+    stylesheetIncludes: 'src/stylesheets/includes',
     images: ['src/images/**/*.{jpg,jpeg,JPG,png,gif}']
 };
 

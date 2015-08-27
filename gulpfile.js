@@ -148,32 +148,32 @@ gulp.task('sprite', function (callback) {
   return merge2.apply(merge2, streams);
 });
 
-gulp.task('svg-sprite', function () {
-  var svgSprite = require('gulp-svg-sprite');
-  var config = {
-    mode: {
-      css: {
-        dest: 'dist',
-        sprite: '../svg/svg-icons.css.svg',
-        render: {
-          less: {
-            dest: '../../' + paths.stylesheetIncludes + '/sprites/svg-icons'
-          }
-        },
-        dimensions: false
-      }
-    }
-  };
-
-  return gulp.src('src/svg/*.svg')
-    .pipe(svgSprite(config))
-    .pipe(gulp.dest('dist'));
-});
+//gulp.task('svg-sprite', function () {
+//  var svgSprite = require('gulp-svg-sprite');
+//  var config = {
+//    mode: {
+//      css: {
+//        dest: 'dist',
+//        sprite: '../svg/svg-icons.css.svg',
+//        render: {
+//          less: {
+//            dest: '../../' + paths.stylesheetIncludes + '/sprites/svg-icons'
+//          }
+//        },
+//        dimensions: false
+//      }
+//    }
+//  };
+//
+//  return gulp.src('src/svg/*.svg')
+//    .pipe(svgSprite(config))
+//    .pipe(gulp.dest('dist'));
+//});
 
 
 gulp.task('app', function (callback) {
   runSequence(
-    ['app-js', 'templates', 'sprite', 'svg-sprite'],
+    ['app-js', 'templates', 'sprite'],
     'app-css',
     'index.html',
     callback

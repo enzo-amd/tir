@@ -8,8 +8,8 @@
         'ui.router',
         //'ui.bootstrap',
         //'ngAnimate',
-        'ngMaterial',
-        'treasure-overlay-spinner',
+        //'ngMaterial',
+        //'treasure-overlay-spinner',
         'templates'
     ])
         .config(config)
@@ -19,18 +19,18 @@
      });*/
 
 
-    function config($stateProvider, $locationProvider, $urlRouterProvider, $mdIconProvider, $mdThemingProvider) {
+    function config($stateProvider, $urlRouterProvider) {
 
-        $mdIconProvider
-          //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
-          .iconSet('social', './bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24)
-          .defaultIconSet('./bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24);
+        //$mdIconProvider
+        //  //.iconSet('social', 'img/icons/sets/social-icons.svg', 24)
+        //  .iconSet('social', './bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24)
+        //  .defaultIconSet('./bower_components/angular-material/demos/icon/demoSvgIconSets/assets/core-icons.svg', 24);
 
-        $mdThemingProvider.theme('success');
-        $mdThemingProvider.theme('error');
+        //$mdThemingProvider.theme('success');
+        //$mdThemingProvider.theme('error');
 
 
-        $urlRouterProvider.otherwise('home');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
             .state('home', {
@@ -84,7 +84,7 @@
 
         //$locationProvider.html5Mode(true);
     }
-    config.$inject = ["$stateProvider", "$locationProvider", "$urlRouterProvider", "$mdIconProvider", "$mdThemingProvider"];
+    config.$inject = ["$stateProvider", "$urlRouterProvider"];
 
     function run($rootScope, $state, $stateParams, Util, Auth) {
 
@@ -257,7 +257,7 @@
 
 (function (module) {
 
-    module.service('Notify', ["$mdToast", function ($mdToast) {
+    module.service('Notify', function (/*$mdToast*/) {
 
 
         // Implementations
@@ -265,7 +265,7 @@
         function show(params) {
             var messageContent = params.template ? _.template(params.template)({data: params.data}) : params.content;
             var delay = params.delay || 10000;
-            var toast = $mdToast.simple()
+            /*var toast = $mdToast.simple()
               .content(messageContent)
               .position('top right')
               .hideDelay(delay);
@@ -274,7 +274,9 @@
                 toast.theme(params.type);
             }
 
-            $mdToast.show(toast);
+            $mdToast.show(toast);*/
+
+            console.log(messageContent);
         }
 
 
@@ -283,7 +285,7 @@
         return {
             show: show
         };
-    }]);
+    });
 
 })(angular.module('application'));
 
@@ -622,7 +624,7 @@
         return {
             templateUrl: 'modules/main-menu/tpl/main-menu.view.html',
             scope: {},
-            controller: ["$scope", "$element", "$rootScope", "$mdSidenav", "Auth", function ($scope, $element, $rootScope, $mdSidenav, Auth) {
+            controller: ["$scope", "$element", "$rootScope", "Auth", function ($scope, $element, $rootScope, Auth) {
 
                 // Pass fields to the $scope
                 _.assign($scope, {
@@ -639,13 +641,13 @@
                 // Implementations
 
                 function toggle(state) {
-                    var mdSidenav = $mdSidenav('main-menu');
+                    /*var mdSidenav = $mdSidenav('main-menu');
 
                     state = _.isUndefined(state) ? !mdSidenav.isOpen() : !!state;
 
                     var method = state ? 'open' : 'close';
 
-                    mdSidenav[method]();
+                    mdSidenav[method]();*/
                 }
 
                 function logout() {

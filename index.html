@@ -19,9 +19,21 @@
     <script src="javascripts/templates.js"></script>
 </head>
 <body ng-cloak>
-<div layout="column">
+
+<header class="mui-appbar">
+
+</header>
+<main class="mui-container-fluid" ui-view>
+    <!--<div class="mui-panel">
+        <h1>My Title</h1>
+        <button class="mui-btn mui-btn-primary mui-btn-raised">My Button</button>
+    </div>-->
+</main>
+
+<!--<div layout="column">-->
+
     <!-- The top toolbar -->
-    <md-toolbar ng-controller="MainToolbarController as vm">
+    <!--<md-toolbar ng-controller="MainToolbarController as vm">
         <div class="md-toolbar-tools">
             <md-button class="md-icon-button" aria-label="Меню" ng-click="vm.toggleMainMenu()">
                 <md-icon>more_vert</md-icon>
@@ -46,8 +58,8 @@
             <main ui-view></main>
         </md-content>
 
-    </section>
-</div>
+    </section>-->
+<!--</div>-->
 
 
 </body>

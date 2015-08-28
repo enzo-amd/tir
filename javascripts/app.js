@@ -34,7 +34,7 @@
 
         $stateProvider
             .state('home', {
-                url: '/', templateUrl: 'modules/home/templates/home.view.html',
+                url: '/', templateUrl: 'modules/home/tpl/home.view.html',
                 controller: 'HomeController',
                 controllerAs: 'vm',
                 access: {
@@ -42,7 +42,7 @@
                 }
             })
             .state('login', {
-                url: '/login?from', templateUrl: 'modules/login/templates/login.view.html',
+                url: '/login?from', templateUrl: 'modules/login/tpl/login.view.html',
                 controller: 'LoginController',
                 controllerAs: 'vm'
             })
@@ -126,79 +126,84 @@
 
 (function (module) {
 
-    module.service('Auth', ["$q", "$state", "Notify", "Backend", function ($q, $state, Notify, Backend) {
+  module.service('Auth', ["$rootScope", "$q", "$state", "Notify", "Backend", function ($rootScope, $q, $state, Notify, Backend) {
 
-        var state = {
-            user: null
-        };
-
-
-        // Implementations
-
-        function login(userCredentials) {
-            var promise = Backend.call('UserService.login', userCredentials.email, userCredentials.password, true);
-
-            promise.then(function (user) {
-                console.info('login', user);
-
-                Notify.show({
-                    template: 'Добро пожаловать, <%- data.name %>!',
-                    type: 'success',
-                    data: user
-                });
-            });
-
-            return promise;
-        }
-
-        function logout() {
-            var promise = isLoggedIn() ? Backend.call('UserService.logout') : $q.when(true);
-
-            promise.then(function () {
-                console.info('logout');
-
-                state.user = null;
-
-                $state.go('login');
-            });
-
-            return promise;
-        }
-
-        function userTokenIsValid() {
-            var success = function (data) {
-                console.log('userTokenIsValid', data);
-            };
-            var error = function (data) {
-                console.log('error', data);
-            };
-
-            Backendless.UserService.isValidLogin(new Backendless.Async(success, error));
-        }
-
-        function isLoggedIn() {
-            var user = state.user = state.user || Backendless.LocalCache.get('current-user');
-
-            return !!user;
-        }
-
-        function showLogin(params) {
-            $state.go('login', params);
-        }
+    var state = {
+      user: null
+    };
 
 
+    // Implementations
 
-        // Export
+    function login(userCredentials) {
+      var promise = Backend.call('UserService.login', userCredentials.email, userCredentials.password, true);
 
-        return {
-            state: state,
+      promise.then(function (user) {
+        console.info('login', user);
 
-            login: login,
-            logout: logout,
-            isLoggedIn: isLoggedIn,
-            showLogin: showLogin
-        };
-    }]);
+        Notify.show({
+          template: 'Добро пожаловать, <%- data.name %>!',
+          type: 'success',
+          data: user
+        });
+      });
+
+      return promise;
+    }
+
+    function logout() {
+      var promise = isLoggedIn() ? Backend.call('UserService.logout') : $q.when(true);
+
+      $rootScope.$emit('spinner', true);
+
+      promise
+        .then(function () {
+          console.info('logout');
+
+          state.user = null;
+
+          $state.go('login');
+        })
+        .finally(function () {
+          $rootScope.$emit('spinner', false);
+        });
+
+      return promise;
+    }
+
+    function userTokenIsValid() {
+      var success = function (data) {
+        console.log('userTokenIsValid', data);
+      };
+      var error = function (data) {
+        console.log('error', data);
+      };
+
+      Backendless.UserService.isValidLogin(new Backendless.Async(success, error));
+    }
+
+    function isLoggedIn() {
+      var user = state.user = state.user || Backendless.LocalCache.get('current-user');
+
+      return !!user;
+    }
+
+    function showLogin(params) {
+      $state.go('login', params);
+    }
+
+
+    // Export
+
+    return {
+      state: state,
+
+      login: login,
+      logout: logout,
+      isLoggedIn: isLoggedIn,
+      showLogin: showLogin
+    };
+  }]);
 
 })(angular.module('application'));
 
@@ -252,6 +257,73 @@
             call: call
         };
     }]);
+
+})(angular.module('application'));
+
+(function (module) {
+
+  module.service('Guns', ["$q", function ($q) {
+
+    var state = {
+      guns: null
+    };
+
+    var guns = [
+      {
+        name: 'g1',
+        title: 'G1',
+        image: 'gun-1.jpg'
+      },
+      {
+        name: 'g2',
+        title: 'G2',
+        image: 'gun-2.jpg'
+      },
+      {
+        name: 'g3',
+        title: 'G3',
+        image: 'gun-3.jpg'
+      },
+      {
+        name: 'g4',
+        title: 'G4',
+        image: 'gun-4.jpg'
+      },
+      {
+        name: 'g5',
+        title: 'G5',
+        image: 'gun-5.jpg'
+      },
+      {
+        name: 'g6',
+        title: 'G6',
+        image: 'gun-6.jpg'
+      },
+      {
+        name: 'g7',
+        title: 'G7',
+        image: 'gun-7.jpg'
+      }
+    ];
+
+
+    // Implementations
+
+    function getGuns() {
+      return $q(function (resolve, reject) {
+        resolve(guns);
+      });
+    }
+
+
+    // Export
+
+    return {
+      state: state,
+
+      getGuns: getGuns
+    };
+  }]);
 
 })(angular.module('application'));
 
@@ -505,6 +577,120 @@
 
 })(angular.module('application'));
 
+/**
+ * Created by Yury.Sergunin on 27.08.2015.
+ */
+
+(function (module) {
+
+  module.directive('appBar', function () {
+    return {
+      templateUrl: 'modules/app-bar/tpl/app-bar.view.html',
+      scope: {},
+      controller: ["$scope", "Auth", function ($scope, Auth) {
+
+        // Pass fields to the $scope
+        _.assign($scope, {
+
+        });
+
+        // Pass methods to the $scope
+        _.assign($scope, {
+          isLoggedIn: Auth.isLoggedIn,
+          logout: logout
+        });
+
+
+        // Implementations
+
+        function logout() {
+          Auth.logout();
+        }
+      }]
+    };
+  });
+
+})(angular.module('application'));
+
+/**
+ * Created by Yury.Sergunin on 28.08.2015.
+ */
+
+(function (module) {
+
+  module.directive('gunTile', function () {
+    return {
+      templateUrl: 'modules/guns/tpl/gun-tile.view.html',
+      scope: {
+        gun: '=gunTile'
+      },
+      controller: ["$scope", "Guns", function ($scope, Guns) {
+
+        // Pass fields to the $scope
+        _.assign($scope, {
+
+        });
+
+        // Pass methods to the $scope
+        _.assign($scope, {
+
+        });
+
+
+        // Initialize
+
+
+        // Implementations
+
+      }]
+    };
+  });
+
+})(angular.module('application'));
+
+/**
+ * Created by Yury.Sergunin on 28.08.2015.
+ */
+
+(function (module) {
+
+  module.directive('gunTiles', function () {
+    return {
+      templateUrl: 'modules/guns/tpl/gun-tiles.view.html',
+      scope: {},
+      controller: ["$scope", "Guns", function ($scope, Guns) {
+
+        // Pass fields to the $scope
+        _.assign($scope, {
+          guns: null
+        });
+
+        // Pass methods to the $scope
+        _.assign($scope, {
+
+        });
+
+
+        // Initialize
+
+        fetchGuns();
+
+
+        // Implementations
+
+        function fetchGuns() {
+          Guns.getGuns()
+            .then(function (guns) {
+              $scope.guns = guns;
+            });
+        }
+
+      }]
+    };
+  });
+
+})(angular.module('application'));
+
 (function (module) {
     'use strict';
 
@@ -537,81 +723,77 @@
 
 })(angular.module('application'));
 (function (module) {
-    'use strict';
+  'use strict';
 
-    module.controller('LoginController', LoginController);
+  module.controller('LoginController', LoginController);
 
-    function LoginController($state, Auth, Util, Tirs) {
-        var vm = this;
-
-
-        var userCredentials = {
-            email: 'user1@mail.com',
-            password: '123456789'
-        };
-
-        var logoutPromise = Auth.logout();
+  function LoginController($rootScope, $state, Auth, Util, Tirs) {
+    var vm = this;
 
 
-        // Pass fields to the View
-        _.assign(vm, {
-            userCredentials: userCredentials,
-            tirsState: Tirs.state,
+    var userCredentials = {
+      email: 'user1@mail.com',
+      password: '123456789'
+    };
 
-            spinner: {
-                active: false
-            }
+    var logoutPromise = Auth.logout();
+
+
+    // Pass fields to the View
+    _.assign(vm, {
+      userCredentials: userCredentials,
+      tirsState: Tirs.state
+    });
+
+
+    // Pass methods to the View
+    _.assign(vm, {
+      login: login
+    });
+
+
+    // Initialize
+
+    (function () {
+      $rootScope.$emit('spinner', true);
+
+      logoutPromise.then(function () {
+        return Tirs.getTirs()
+          .then(function (tirs) {
+            Tirs.state.tir = Tirs.state.tir || tirs[0];
+          });
+      })
+        .finally(function () {
+          $rootScope.$emit('spinner', false);
         });
+    })();
 
 
-        // Pass methods to the View
-        _.assign(vm, {
-            login: login
+    // Implementations
+
+    function login() {
+      $rootScope.$emit('spinner', true);
+
+      console.log('auth');
+
+      Auth.login(vm.userCredentials)
+        .then(function pass() {
+          var originalPageInfo = Util.decodeState($state.params.from);
+
+          if (originalPageInfo) {
+            $state.go(originalPageInfo.state.name, originalPageInfo.params, {reload: true});
+          }
+          else {
+            $state.go('home');
+          }
+        })
+        .finally(function () {
+          $rootScope.$emit('spinner', false);
         });
-
-
-        // Initialize
-
-        (function () {
-            vm.spinner.active = true;
-
-            logoutPromise.then(function () {
-                return Tirs.getTirs()
-                    .then(function (tirs) {
-                        Tirs.state.tir = Tirs.state.tir || tirs[0];
-                    });
-            })
-                .finally(function () {
-                    vm.spinner.active = false;
-                });
-        })();
-
-
-        // Implementations
-
-        function login() {
-            vm.spinner.active = true;
-
-            console.log('auth');
-
-            Auth.login(vm.userCredentials)
-                .then(function pass() {
-                  var originalPageInfo = Util.decodeState($state.params.from);
-
-                  if (originalPageInfo) {
-                      $state.go(originalPageInfo.state.name, originalPageInfo.params, {reload: true});
-                  }
-                  else {
-                      $state.go('home');
-                  }
-                })
-                .finally(function () {
-                    vm.spinner.active = false;
-                });
-        }
-
     }
-    LoginController.$inject = ["$state", "Auth", "Util", "Tirs"];
+
+  }
+  LoginController.$inject = ["$rootScope", "$state", "Auth", "Util", "Tirs"];
 
 })(angular.module('application'));
 /**
@@ -692,4 +874,96 @@
 
 
 })(angular.module('application'));
+/**
+ * Created by Yury.Sergunin on 28.08.2015.
+ */
+
+(function (module) {
+
+  module.directive('spinner', function () {
+    return {
+      scope: {
+        isActive: '=?spinner'
+      },
+      controller: ["$scope", "$rootScope", function ($scope, $rootScope) {
+
+        var options = {
+          overlay: {
+            keyboard: false, // teardown when <esc> key is pressed (default: true)
+            static: true, // maintain overlay when clicked (default: false)
+            onclose: function() { // execute function when overlay is closed
+              overlay = null;
+              toggle(false);
+            }
+          }
+        };
+
+        var overlay = null;
+
+        // Pass fields to the $scope
+        _.assign($scope, {
+
+        });
+
+        // Pass methods to the $scope
+        _.assign($scope, {
+
+        });
+
+
+        // Implementations
+
+        function toggle(state) {
+          if (state) {
+            var $spinner = $(
+              '<svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">' +
+              '   <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>' +
+              '</svg>'
+            );
+
+            $spinner.appendTo(document.body);
+
+            overlay = mui.overlay('on', options.overlay, $spinner[0]);
+
+            $(overlay).addClass('spinner-overlay');
+          }
+          else if (overlay) {
+            mui.overlay('off');
+            overlay = null;
+          }
+
+          $scope.isActive = !!state;
+        }
+
+
+        // Watchers
+
+        $scope.$watch('isActive', function () {
+          toggle($scope.isActive);
+        });
+
+        (function () {
+          if (_.isUndefined($scope.isActive)) {
+            console.log('set on');
+
+            var off = $rootScope.$on('spinner', function (event, state) {
+              console.trace('on', state);
+
+              $scope.isActive = !!state;
+            });
+
+            $scope.$on('$destroy', function () {
+              console.log('set off');
+
+              off();
+            });
+          }
+        })();
+
+      }]
+    };
+  });
+
+})(angular.module('application'));
+
 //# sourceMappingURL=../../dist/javascripts/app.js.map

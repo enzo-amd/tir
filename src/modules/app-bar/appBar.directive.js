@@ -8,7 +8,7 @@
     return {
       templateUrl: 'modules/app-bar/tpl/app-bar.view.html',
       scope: {},
-      controller: function ($scope, $element, $rootScope, Auth) {
+      controller: function ($scope, Auth) {
 
         // Pass fields to the $scope
         _.assign($scope, {

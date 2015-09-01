@@ -99,6 +99,11 @@ gulp.task('app-css', function () {
  });*/
 
 
+gulp.task('images', function () {
+    return gulp.src(['src/images/**/*.*', '!src/images/sprites/**/*'])
+        .pipe(gulp.dest(paths.dist + '/images'));
+});
+
 gulp.task('sprite', function (callback) {
   var merge2 = require('merge2');
   var spritesmith = require('gulp.spritesmith');
@@ -173,7 +178,7 @@ gulp.task('sprite', function (callback) {
 
 gulp.task('app', function (callback) {
   runSequence(
-    ['app-js', 'templates', 'sprite'],
+    ['app-js', 'templates', 'images', 'sprite'],
     'app-css',
     'index.html',
     callback

@@ -120,6 +120,67 @@
 
 
 })();
+(function (module) {
+
+  module.service('AppState', function () {
+
+    var state = {
+      draftSession: false,
+      sessions: []
+    };
+
+
+    // Implementations
+
+    function Session(options) {
+      _.assign(this, {
+        draft: true
+      }, options);
+
+      return this;
+    }
+
+    function newSession(options) {
+      var session = new Session(options);
+
+      state.sessions.push(session);
+
+      state.draftSession = session;
+
+      return session;
+    }
+
+    function cancelSession(session) {
+      var sessionIndex = _.findIndex(state.sessions, session);
+
+      if (sessionIndex >= 0) {
+        state.sessions.splice(sessionIndex, 1);
+      }
+
+      if (state.draftSession === session) {
+        getDraftSession();
+      }
+    }
+
+    function getDraftSession() {
+      return state.draftSession = _.find(state.sessions, 'draft');
+    }
+
+
+    // Export
+
+    return {
+      state: state,
+
+      Session: Session,
+      newSession: newSession,
+      cancelSession: cancelSession,
+      getDraftSession: getDraftSession
+    };
+  });
+
+})(angular.module('application'));
+
 /**
  * Created by YuraVika on 13.08.2015.
  */
@@ -771,34 +832,30 @@
 })(angular.module('application'));
 
 (function (module) {
-    'use strict';
+  'use strict';
 
-    module.controller('HomeController', HomeController);
+  module.controller('HomeController', HomeController);
 
-    function HomeController() {
-        var vm = this;
-
-
-        // Pass fields to the View
-        _.assign(vm, {
-            spinner: {
-                active: false
-            }
-        });
+  function HomeController() {
+    var vm = this;
 
 
-        // Pass methods to the View
-        _.assign(vm, {
-
-        });
-
-
-
-        // Implementations
+    // Pass fields to the View
+    _.assign(vm, {
+      spinner: {
+        active: false
+      }
+    });
 
 
+    // Pass methods to the View
+    _.assign(vm, {});
 
-    }
+
+    // Implementations
+
+
+  }
 
 })(angular.module('application'));
 (function (module) {

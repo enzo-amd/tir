@@ -1,5 +1,6 @@
 <div class="gun-tile__inner mui-z1 aspect-ration-16-9">
     <div class="-content">
-        {{ gun.title }}
+        <img class="gun-list-item__pic__img" ng-src="images/weapons/{{ gun.image }}" alt="{{ ::gun.title }}"/>
+        <div>{{ gun.title }}</div>
     </div>
 </div>

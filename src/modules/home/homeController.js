@@ -1,31 +1,27 @@
 (function (module) {
-    'use strict';
+  'use strict';
 
-    module.controller('HomeController', HomeController);
+  module.controller('HomeController', HomeController);
 
-    function HomeController() {
-        var vm = this;
-
-
-        // Pass fields to the View
-        _.assign(vm, {
-            spinner: {
-                active: false
-            }
-        });
+  function HomeController() {
+    var vm = this;
 
 
-        // Pass methods to the View
-        _.assign(vm, {
-
-        });
-
-
-
-        // Implementations
+    // Pass fields to the View
+    _.assign(vm, {
+      spinner: {
+        active: false
+      }
+    });
 
 
+    // Pass methods to the View
+    _.assign(vm, {});
 
-    }
+
+    // Implementations
+
+
+  }
 
 })(angular.module('application'));

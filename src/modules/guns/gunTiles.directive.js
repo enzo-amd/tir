@@ -4,7 +4,7 @@
 
 (function (module) {
 
-  module.directive('gunTiles', function (AppState) {
+  module.directive('gunTiles', function (AppState, Sessions) {
     return {
       templateUrl: 'modules/guns/tpl/gun-tiles.view.html',
       scope: {},
@@ -30,20 +30,14 @@
 
         function fetchGuns() {
           Guns.getGuns()
-            .then(function (guns) {
-              $scope.guns = guns;
-            });
+              .then(function (guns) {
+                $scope.guns = guns;
+              });
         }
 
         function openGunSession() {
           var gun = this.gun;
-          var session = _.find(AppState.state.sessions, {gun: gun});
-
-          if (!session) {
-            session = AppState.newSession({
-              gun: gun
-            });
-          }
+          var session = Sessions.open(gun);
 
           console.log(session);
         }

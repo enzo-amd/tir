@@ -1,0 +1,28 @@
+<md-toolbar>
+    <div class="md-toolbar-tools" layout="row">
+        <div layout="row" layout-align="start center" flex>
+            <md-button class="md-icon-button" aria-label="Назад" ng-click="toggle(false)">
+                <md-icon>keyboard_backspace</md-icon>
+                <md-tooltip>Назад</md-tooltip>
+            </md-button>
+        </div>
+        <div layout="row" layout-align="end center" flex>
+            <md-button class="md-icon-button" aria-label="Выйти" ng-click="logout()">
+                <md-icon>power_settings_new</md-icon>
+                <md-tooltip>Выйти</md-tooltip>
+            </md-button>
+        </div>
+    </div>
+</md-toolbar>
+<md-content layout-padding>
+    <form>
+        <md-input-container>
+            <label for="testInput">Test input</label>
+            <input type="text" id="testInput"
+                   ng-model="data" md-sidenav-focus>
+        </md-input-container>
+    </form>
+    <md-button ng-click="close()" class="md-primary">
+        Close Sidenav Left
+    </md-button>
+</md-content>

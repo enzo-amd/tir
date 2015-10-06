@@ -1,0 +1,60 @@
+<!--<div flex layout="row" layout-align="center center" layout-margin>
+    <div flex-sm="100" flex-gt-sm="90" flex-gt-md="50" flex-gt-lg="33" class="md-whiteframe-z2">
+        <md-content class="md-padding">
+            <div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+                <h3>Авторизация в системе</h3>
+
+                <treasure-overlay-spinner active='vm.spinner.active'>
+                    <form name="loginForm" data-ng-submit="vm.login()">
+
+                        <md-input-container flex>
+                            <label>Адрес электронной почты:</label>
+                            <input type="email" ng-model="vm.userCredentials.email" required>
+                        </md-input-container>
+
+                        <md-input-container flex>
+                            <label>Пароль:</label>
+                            <input type="password" ng-model="vm.userCredentials.password" required>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <md-select ng-model="vm.tirsState.tir" placeholder="Тир">
+                                <md-option ng-value="tir" ng-repeat="tir in vm.tirsState.tirs">{{ tir.title }}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-button type="submit" class="md-primary"
+                                   ng-class="{'md-raised md-hue-1': loginForm.$valid }"
+                                   aria-label="Submit Login">Войти
+                        </md-button>
+
+                    </form>
+                </treasure-overlay-spinner>
+
+            </div>
+        </md-content>
+    </div>
+</div>-->
+
+
+<div class="mui-container">
+    <div class="mui-row">
+        <div class="mui-panel">
+            <form name="loginForm" data-ng-submit="vm.login()">
+                <legend>Вход в систему</legend>
+
+                <div class="mui-form-group">
+                    <input type="email" class="mui-form-control" ng-model="vm.userCredentials.email" required>
+                    <label class="mui-form-floating-label">Логин</label>
+                </div>
+
+                <div class="mui-form-group">
+                    <input type="password" class="mui-form-control" ng-model="vm.userCredentials.password" required>
+                    <label class="mui-form-floating-label">Пароль</label>
+                </div>
+
+                <button type="submit" class="mui-btn mui-btn-primary mui-btn-raised">Войти</button>
+            </form>
+        </div>
+    </div>
+</div>

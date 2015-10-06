@@ -1,0 +1,49 @@
+{
+  "name": "tir",
+  "version": "0.0.0",
+  "main": "app.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "authors": [
+    "Yuriy Sergunin"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.3",
+    "lodash": "~3.10.1",
+    "backendless": "*",
+    "jquery": "~2.1.4",
+    "angular-route": "~1.4.3",
+    "material-design-icons": "~2.0.0",
+    "angular-ui-router": "~0.2.15",
+    "mui": "~0.1.21",
+    "mdi": "~1.2.65"
+  },
+  "overrides": {
+    "material-design-icons": {
+      "main": [
+        "iconfont/MaterialIcons-Regular.eot",
+        "iconfont/MaterialIcons-Regular.ttf",
+        "iconfont/MaterialIcons-Regular.woff",
+        "iconfont/MaterialIcons-Regular.woff2"
+      ]
+    },
+    "mui": {
+      "main": [
+        "dist/css/mui.css",
+        "dist/js/mui.js"
+      ]
+    }
+  }
+}

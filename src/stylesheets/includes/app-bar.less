@@ -1,0 +1,20 @@
+.app-bar {
+  &__icon-btn {
+    border-radius: 50%;
+    & > .mui-ripple-effect {
+      border-radius: 50%;
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+      background-color: transparent;
+      box-shadow: none;
+      color: white;
+    }
+
+    & > .material-icons {
+      vertical-align: middle;
+    }
+  }
+}

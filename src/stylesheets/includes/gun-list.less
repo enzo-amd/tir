@@ -1,0 +1,27 @@
+.gun-list {
+  border: solid 1px rgba(0, 0, 0, .5);
+
+  &-item {
+    .aspect-ratio(16, 9);
+    border-bottom: solid 1px rgba(0, 0, 0, .5);
+
+    > .-content {
+      padding: 5px;
+    }
+
+    &__pic,
+    &__title {
+      display: inline-block;
+    }
+
+    &__pic {
+      position: relative;
+      max-width: 50%;
+      height: 35px;
+      &__img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+  }
+}

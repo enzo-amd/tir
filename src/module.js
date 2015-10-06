@@ -6,6 +6,7 @@
     angular.module('application', [
         'ngRoute',
         'ui.router',
+        'angularModalService',
         //'ui.bootstrap',
         //'ngAnimate',
         //'ngMaterial',

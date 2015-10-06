@@ -28,7 +28,8 @@
     "material-design-icons": "~2.0.0",
     "angular-ui-router": "~0.2.15",
     "mui": "~0.1.21",
-    "mdi": "~1.2.65"
+    "mdi": "~1.2.65",
+    "angular-modal-service": "~0.6.9"
   },
   "overrides": {
     "material-design-icons": {

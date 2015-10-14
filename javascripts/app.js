@@ -6,6 +6,7 @@
     angular.module('application', [
         'ngRoute',
         'ui.router',
+        'angularModalService',
         //'ui.bootstrap',
         //'ngAnimate',
         //'ngMaterial',
@@ -639,41 +640,6 @@
 })(angular.module('application'));
 
 /**
- * Created by Yury.Sergunin on 27.08.2015.
- */
-
-(function (module) {
-
-  module.directive('appBar', function () {
-    return {
-      templateUrl: 'modules/app-bar/tpl/app-bar.view.html',
-      scope: {},
-      controller: ["$scope", "Auth", function ($scope, Auth) {
-
-        // Pass fields to the $scope
-        _.assign($scope, {
-
-        });
-
-        // Pass methods to the $scope
-        _.assign($scope, {
-          isLoggedIn: Auth.isLoggedIn,
-          logout: logout
-        });
-
-
-        // Implementations
-
-        function logout() {
-          Auth.logout();
-        }
-      }]
-    };
-  });
-
-})(angular.module('application'));
-
-/**
  * Created by Yury.Sergunin on 28.08.2015.
  */
 
@@ -794,7 +760,7 @@
 
 (function (module) {
 
-  module.directive('gunTiles', ["AppState", function (AppState) {
+  module.directive('gunTiles', ["AppState", "Sessions", function (AppState, Sessions) {
     return {
       templateUrl: 'modules/guns/tpl/gun-tiles.view.html',
       scope: {},
@@ -820,20 +786,14 @@
 
         function fetchGuns() {
           Guns.getGuns()
-            .then(function (guns) {
-              $scope.guns = guns;
-            });
+              .then(function (guns) {
+                $scope.guns = guns;
+              });
         }
 
         function openGunSession() {
           var gun = this.gun;
-          var session = _.find(AppState.state.sessions, {gun: gun});
-
-          if (!session) {
-            session = AppState.newSession({
-              gun: gun
-            });
-          }
+          var session = Sessions.open(gun);
 
           console.log(session);
         }
@@ -841,6 +801,41 @@
       }]
     };
   }]);
+
+})(angular.module('application'));
+
+/**
+ * Created by Yury.Sergunin on 27.08.2015.
+ */
+
+(function (module) {
+
+  module.directive('appBar', function () {
+    return {
+      templateUrl: 'modules/app-bar/tpl/app-bar.view.html',
+      scope: {},
+      controller: ["$scope", "Auth", function ($scope, Auth) {
+
+        // Pass fields to the $scope
+        _.assign($scope, {
+
+        });
+
+        // Pass methods to the $scope
+        _.assign($scope, {
+          isLoggedIn: Auth.isLoggedIn,
+          logout: logout
+        });
+
+
+        // Implementations
+
+        function logout() {
+          Auth.logout();
+        }
+      }]
+    };
+  });
 
 })(angular.module('application'));
 
@@ -1112,6 +1107,101 @@
       }]
     };
   });
+
+})(angular.module('application'));
+
+(function (module) {
+
+    module.service('Sessions', ["AppState", "ModalService", function (AppState, ModalService) {
+
+
+        // Implementations
+
+        function open(params) {
+            var gun = params.gun;
+            var session = _.find(AppState.state.sessions, {gun: gun});
+
+            if (!session) {
+                session = AppState.newSession({
+                    gun: gun
+                });
+            }
+
+            // Just provide a template url, a controller and call 'showModal'.
+            ModalService.showModal({
+                templateUrl: 'modules/session/tpl/session-modal.view.html',
+                controller: 'SessionModalController',
+                inputs: {
+                    session: session
+                }
+            }).then(function(modal) {
+                // The modal object has the element built, if this is a bootstrap modal
+                // you can call 'modal' to show it, if it's a custom modal just show or hide
+                // it as you need to.
+                //modal.element.modal();
+                //modal.close.then(function(result) {
+                //    $scope.message = result ? "You said Yes" : "You said No";
+                //});
+
+                mui.overlay('on', {
+                    keyboard: true,
+                    static: false,
+                    onclose: function () {
+                        modal.controller.close();
+                    }
+                }, modal.element[0]);
+            });
+
+
+            return session;
+        }
+
+
+        // Export
+
+        return {
+            open: open
+        };
+    }]);
+
+})(angular.module('application'));
+
+(function (module) {
+
+    module.controller('SessionModalController', ["$scope", "close", "session", function ($scope, close, session) {
+        var self = this;
+
+
+        // Export the controller's API
+        _.assign(self, {
+            close: doClose
+        });
+
+
+        // Export API to the $scope
+        _.assign($scope, {
+            session: session,
+
+            close: doClose
+        });
+
+
+        // Implementations
+
+        function doClose(result) {
+            console.log('close');
+
+            close(result);
+        }
+
+
+        // Watchers
+
+        $scope.$on('$destroy', function () {
+            console.log('$destroy');
+        });
+
+    }]);
 
 })(angular.module('application'));
 

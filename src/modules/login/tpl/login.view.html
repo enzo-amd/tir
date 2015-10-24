@@ -43,14 +43,14 @@
             <form name="loginForm" data-ng-submit="vm.login()">
                 <legend>Вход в систему</legend>
 
-                <div class="mui-form-group">
-                    <input type="email" class="mui-form-control" ng-model="vm.userCredentials.email" required>
-                    <label class="mui-form-floating-label">Логин</label>
+                <div class="mui-textfield mui-textfield--float-label">
+                    <input type="email" ng-model="vm.userCredentials.email" required>
+                    <label>Логин</label>
                 </div>
 
-                <div class="mui-form-group">
-                    <input type="password" class="mui-form-control" ng-model="vm.userCredentials.password" required>
-                    <label class="mui-form-floating-label">Пароль</label>
+                <div class="mui-textfield mui-textfield--float-label">
+                    <input type="password" ng-model="vm.userCredentials.password" required>
+                    <label>Пароль</label>
                 </div>
 
                 <button type="submit" class="mui-btn mui-btn--primary mui-btn--raised">Войти</button>

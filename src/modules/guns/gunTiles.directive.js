@@ -4,7 +4,7 @@
 
 (function (module) {
 
-  module.directive('gunTiles', function (AppState, Sessions) {
+  module.directive('gunTiles', function (AppState) {
     return {
       templateUrl: 'modules/guns/tpl/gun-tiles.view.html',
       scope: {},
@@ -17,7 +17,7 @@
 
         // Pass methods to the $scope
         _.assign($scope, {
-          openGunSession: openGunSession
+
         });
 
 
@@ -33,13 +33,6 @@
               .then(function (guns) {
                 $scope.guns = guns;
               });
-        }
-
-        function openGunSession() {
-          var gun = this.gun;
-          var session = Sessions.open(gun);
-
-          console.log(session);
         }
 
       }

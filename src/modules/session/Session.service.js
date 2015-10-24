@@ -8,8 +8,10 @@
         function open(params) {
             var gun = params.gun;
             var session = _.find(AppState.state.sessions, {gun: gun});
+            var isNewSession = false;
 
             if (!session) {
+                isNewSession = true;
                 session = AppState.newSession({
                     gun: gun
                 });
@@ -31,13 +33,31 @@
                 //    $scope.message = result ? "You said Yes" : "You said No";
                 //});
 
+                var closed = false;
+                var overlay = true;
+
                 mui.overlay('on', {
                     keyboard: true,
                     static: false,
                     onclose: function () {
-                        modal.controller.close();
+                        overlay = false;
+
+                        !closed && modal.controller.close(false);
                     }
                 }, modal.element[0]);
+
+                modal.close.then(function (result) {
+                    closed = true;
+                    overlay && mui.overlay('off');
+
+                    if (isNewSession) {
+                        if (!result) {
+                            AppState.cancelSession(session);
+                        }
+                    }
+
+                    console.log('closed with result:', result);
+                });
             });
 
 

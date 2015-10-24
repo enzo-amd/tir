@@ -1,3 +1,16 @@
 <div class="modal modal--session">
-    <pre>{{session}}</pre>
+
+    <div ng-if="sessionModalMode === sessionModalModes.price">
+
+        <div class="mui-row common-list">
+            <div ng-repeat="price in prices" class="mui-col-xs-6 common-list-item" ng-click="setPrice(price)">
+                <div class="mui--z1 mui--text-black-54 mui--text-display1 mui--text-center common-list-item__inner"
+                     ng-class="{'common-list-item__inner--selected': session.price === price}">
+                    {{price}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
